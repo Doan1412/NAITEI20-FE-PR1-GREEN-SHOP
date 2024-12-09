@@ -1,0 +1,27 @@
+{
+  "users": [
+    {
+      "id": "5d58",
+      "fullName": "Phan Văn Hùng",
+      "phoneNumber": "0769989432",
+      "email": "h123@gmail.com",
+      "website": "https://www.youtube.com",
+      "password": "123abc",
+      "subscribe": false,
+      "token": "b9f726a4-456b-4445-8d53-8f0b41b7475d",
+      "role": "user"
+    },
+    {
+      "id": "6a9c",
+      "fullName": "Nguyễn Văn A",
+      "phoneNumber": "0769989432",
+      "email": "abc@gmail.com",
+      "website": "https://www.youtube.com",
+      "password": "123abc",
+      "confirmPassword": "123abc",
+      "subscribe": true,
+      "token": "b9f726a4-456b-4474-8d53-8f0b41b7475d",
+      "role": "user"
+    }
+  ]
+}
