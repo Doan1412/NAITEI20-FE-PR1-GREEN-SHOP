@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Divider, Input, Rate, Tabs, TabsProps } from 'antd'
+import { Button, Divider, Input, message, Rate, Tabs, TabsProps } from 'antd'
 import { HeartFilled, SearchOutlined, RightOutlined, LeftOutlined, ShareAltOutlined } from "@ant-design/icons"
 import http from '../../utils/http'
 import { formatNumberWithDots } from '../../utils';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { Product } from '../../types/product.type';
 import { ShareSocial } from 'react-share-social' 
 import ProductCard from '../../components/ProductCard';
 import CommentItem from '../../components/CommentItem';
+import { useAuth } from '../../contexts/AuthContext';
+import { useCart } from '../../contexts/CartContext';
 
 // interface IDetailProduct {
 //   product:
@@ -22,6 +24,9 @@ function DetailProduct() {
   const [listProduct, setListProduct] = useState<Product[]>([]);
   const [currentPagination, setCurrentPagination] = React.useState(1);
   const [showProduct, setShowProduct] = React.useState<Product[]>([]);
+  const { addToCart } = useCart();
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
 
   const getDetailProduct = async () => {
     try {
@@ -51,6 +56,19 @@ function DetailProduct() {
   useEffect(() => {
     setShowProduct(listProduct.slice((currentPagination - 1) * 4, currentPagination * 4));
   }, [currentPagination]);
+
+  const handleAddToCart = () => {
+    if (!isLoggedIn) {
+      message.error('Please login to add product to cart');
+      navigate('/login');
+      return;
+    }
+    if (product) {
+      addToCart(product, quantity);
+    } else {
+      message.error('Product not found');
+    }
+  }
 
   const items: TabsProps['items'] = [
     {
@@ -139,7 +157,7 @@ function DetailProduct() {
           </div>
           <Divider/>
           <div className="flex items-center gap-3 relative">
-            <Button className="bg-[#3FB871] text-white rounded-3xl px-7 py-5">Mua ngay</Button>
+            <Button className="bg-[#3FB871] text-white rounded-3xl px-7 py-5" onClick={handleAddToCart}>Mua ngay</Button>
             <div className="p-1 border w-[40px] h-[40px] flex items-center justify-center rounded-full cursor-pointer transition hover:bg-[#3FB871] group">
               <SearchOutlined style={{fontSize: '12px'}} className="group-hover:text-white" />
             </div>

@@ -25,7 +25,7 @@ const Login = () => {
 
       if (response.data.length > 0) {
         const user = response.data[0];
-        login(user.token, user.role);
+        login(user.token, user.role, user.id, user.fullName);
         message.success("Đăng nhập thành công!");
         navigate("/");
       } else {
@@ -39,7 +39,7 @@ const Login = () => {
   };
 
   return (
-    <div className="w-full max-w-5xl bg-white rounded-lg mx-auto">
+    <div className="w-full max-w-5xl bg-white rounded-lg mx-auto mb-20">
       <div className="mb-16">
         <Breadcrumb
           items={[

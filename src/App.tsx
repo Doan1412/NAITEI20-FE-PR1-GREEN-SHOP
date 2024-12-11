@@ -8,6 +8,10 @@ import { AuthProvider } from "./contexts/AuthContext";
 import DetailProduct from "./page/detail";
 import Home from "./page";
 import Contact from "./page/contact";
+import ProductPage from "./page/ProductPage";
+import CartPage from "./page/Cart";
+import SuccessPage from "./page/OrderSuccess";
+import OrderListPage from "./page/OrderListPage";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +42,22 @@ const router = createBrowserRouter([
         path: "/contact",
         element: <Contact />,
       },
+      {
+        path: "/products",
+        element: <ProductPage />,
+      },
+      {
+        path: "/cart",
+        element: <CartPage />,
+      },
+      {
+        path: "/success_purchase",
+        element: <SuccessPage />,
+      },
+      {
+        path: "/orders",
+        element: <OrderListPage />,
+      }
     ],
   },
 ]);
@@ -52,7 +72,7 @@ function App() {
       }}
     >
       <AuthProvider>
-        <RouterProvider router={router} />
+          <RouterProvider router={router} />
       </AuthProvider>
     </ConfigProvider>
   );

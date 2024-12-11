@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaFacebookF,
   FaTwitter,
@@ -11,13 +11,39 @@ import {
   FaPhoneAlt,
   FaSearch,
 } from "react-icons/fa";
+import { RiFileList2Line } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import Logo from "../assets/images/logo.png";
 import BgHeader from "../assets/images/bg-header.png";
 import { useAuth } from "../contexts/AuthContext";
+import { useCart } from "../contexts/CartContext";
+import { useFilterContext } from "../contexts/FilterContext";
+import { IoClose } from "react-icons/io5";
 
 const Header: React.FC = () => {
   const { isLoggedIn, logout } = useAuth();
+  const { totalQuantity } = useCart();
+  const { filters, setFilters } = useFilterContext();
+  const [queryParams, setQueryParams] = useState<string>("");
+
+  useEffect(() => {
+    setQueryParams(filters.query || "");
+  }, [filters.query]);
+
+  const handleSearch = () => {
+    setFilters({ ...filters, query: queryParams });
+  };
+
+  const handleClear = () => {
+    setQueryParams("");
+    setFilters({ ...filters, query: "" });
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
 
   return (
     <div className="mb-5">
@@ -77,9 +103,17 @@ const Header: React.FC = () => {
                 <>
                   <Link
                     to="/profile"
-                    className="flex items-center justify-center gap-1">
+                    className="flex items-center justify-center gap-1"
+                  >
                     <FaUser />
                     <span>Thông tin cá nhân</span>
+                  </Link>
+                  <Link
+                    to="/orders"
+                    className="flex items-center justify-center gap-1"
+                  >
+                    <RiFileList2Line size={18} />
+                    <span>Đơn hàng</span>
                   </Link>
                   <button
                     onClick={logout}
@@ -122,14 +156,26 @@ const Header: React.FC = () => {
                     (04) 3786 8904
                   </Link>
                 </div>
-                <div className="w-[400px] flex">
+                <div className="w-[400px] flex relative">
                   <input
                     type="text"
                     name="search"
+                    value={queryParams}
+                    onChange={(e) => setQueryParams(e.target.value)}
+                    onKeyDown={handleKeyDown}
                     placeholder="search"
                     className="h-10 w-full rounded-l-[50px] border border-solid border-[/e1e1e1] px-5 pb-1 focus:outline-none"
                   />
+                  {queryParams && (
+                    <button
+                      onClick={handleClear}
+                      className="absolute right-12 top-1/2 transform -translate-y-1/2 focus:outline-none text-gray-500 hover:text-black bg-white"
+                    >
+                      <IoClose className="w-5 h-5" />
+                    </button>
+                  )}
                   <button
+                    onClick={handleSearch}
                     type="submit"
                     className="flex h-10 w-10 items-center justify-center rounded-r-[50px] border border-solid border-[/e1e1e1] bg-white"
                   >
@@ -144,7 +190,8 @@ const Header: React.FC = () => {
                       to="/cart"
                       className="flex items-center justify-center gap-1 hover:text-green-500"
                     >
-                      <FaShoppingBasket className="text-[15px]" />0{" "}
+                      <FaShoppingBasket className="text-[15px]" />
+                      {totalQuantity}
                       <span>Sản phẩm</span>
                     </Link>
                   </div>
@@ -174,7 +221,7 @@ const Header: React.FC = () => {
                   </Link>
                 </li>
                 <li className="group relative py-[13px] hover:bg-active hover:text-white">
-                  <Link to="/">
+                  <Link to="/products">
                     <span>Sản phẩm</span>
                   </Link>
                 </li>

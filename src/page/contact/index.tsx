@@ -1,5 +1,4 @@
-import React from "react";
-import { Button, Form, FormProps, Input, Select, Spin } from "antd";
+import { Button, Form, FormProps, Input } from "antd";
 import { PhoneOutlined, MailOutlined } from "@ant-design/icons";
 
 const Contact = () => {
