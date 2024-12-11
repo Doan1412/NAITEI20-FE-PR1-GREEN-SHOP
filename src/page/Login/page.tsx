@@ -2,11 +2,13 @@ import { Button, Breadcrumb, message, Form, Input, Checkbox } from "antd";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import http from "../../utils/http";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -23,8 +25,7 @@ const Login = () => {
 
       if (response.data.length > 0) {
         const user = response.data[0];
-        localStorage.setItem("token", user.token);
-        localStorage.setItem("role", user.role);
+        login(user.token, user.role);
         message.success("Đăng nhập thành công!");
         navigate("/");
       } else {
@@ -38,7 +39,7 @@ const Login = () => {
   };
 
   return (
-    <div className="w-full max-w-5xl bg-white rounded-lg p-8 mx-auto">
+    <div className="w-full max-w-5xl bg-white rounded-lg mx-auto">
       <div className="mb-16">
         <Breadcrumb
           items={[

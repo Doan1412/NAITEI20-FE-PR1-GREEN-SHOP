@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { Button, Input, Form, Checkbox, Breadcrumb, message } from "antd";
 import { Link, useNavigate } from "react-router";
-import { RegisterFormType } from "../../types/registerForm.type";
+import { User } from "../../types/user.type";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { v4 as uuidv4 } from "uuid";
 import http from "../../utils/http";
 
 const Register = () => {
   const navigation = useNavigate();
-  const [formData, setFormData] = useState<RegisterFormType>({
+  const [formData, setFormData] = useState<User>({
+    id: 0,
     fullName: "",
     phoneNumber: "",
     email: "",
@@ -66,6 +67,7 @@ const Register = () => {
       if (response.status === 201) {
         message.success("Đăng ký thành công!");
         setFormData({
+          id: 0,
           fullName: "",
           phoneNumber: "",
           email: "",
