@@ -22,7 +22,7 @@ const Header: React.FC = () => {
   return (
     <div className="mb-5">
       <div className="bg-black text-gray-400">
-        <div className="container mx-auto w-[75%]">
+        <div className="container mx-auto max-w-[1140px]">
           <div className="flex flex-row justify-between text-[13px]">
             <div className="flex flex-row items-center gap-10">
               <div className="flex flex-row items-center gap-2 md:block">
@@ -156,7 +156,7 @@ const Header: React.FC = () => {
       </div>
 
       <div className="bg-[#009f5f] text-white">
-        <div className="container w-[75%] mx-auto">
+        <div className="container max-w-[1140px] mx-auto">
           <nav className="flex flex-row items-center justify-between">
             <div className="hidden md:block">
               <ul className="flex gap-20">
@@ -189,7 +189,7 @@ const Header: React.FC = () => {
                   </Link>
                 </li>
                 <li className="group relative py-[13px] hover:bg-active hover:text-white">
-                  <Link to="/">
+                  <Link to="/contact">
                     <span>Liên hệ</span>
                   </Link>
                 </li>

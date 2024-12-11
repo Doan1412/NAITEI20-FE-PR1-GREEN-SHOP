@@ -1,0 +1,38 @@
+.card-large {
+  width: 100%;
+  .card-image {
+    width: 100%;
+    height: auto;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .card-content{
+    padding-bottom: 1rem;
+    border-radius: 0 0 0.725rem 0.725rem;
+    margin-top: 0;
+    padding-top: 0.6rem;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
+  }
+}
+
+.most-purchased-card {
+  padding: 5px 10px;
+  margin-bottom: 0.675rem;
+  display: flex;
+  gap: 0.875rem;
+  justify-items: center;
+  align-items: center;
+
+  .card-image {
+    width: 100px;
+    height: auto;
+  }
+
+  .card-content {
+    h3, span, div {
+      font-size: 0.725rem;
+      margin-top: 0;
+    }
+  }
+}
