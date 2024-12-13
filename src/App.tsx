@@ -5,6 +5,9 @@ import Signup from "./page/Signup";
 import Layout from "./layouts/Layout";
 import UserProfile from "./page/UserProfile";
 import { AuthProvider } from "./contexts/AuthContext";
+import DetailProduct from "./page/detail";
+import Home from "./page";
+import Contact from "./page/contact";
 
 const router = createBrowserRouter([
   {
@@ -13,7 +16,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <div>Home</div>,
+        element: <Home />,
       },
       {
         path: "/login",
@@ -26,6 +29,14 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <UserProfile />,
+      },
+      {
+        path: "/products/:id",
+        element: <DetailProduct />,
+      },
+      {
+        path: "/contact",
+        element: <Contact />,
       },
     ],
   },

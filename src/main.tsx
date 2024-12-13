@@ -1,4 +1,4 @@
-import './index.css'
+import './assets/styles/index.css';
 import App from './App.tsx'
 import ReactDOM from 'react-dom/client';
 import { StrictMode } from 'react';
