@@ -10,7 +10,6 @@ import {
   Input,
   message,
 } from "antd";
-import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { Order } from "../../types/order.type";
 import { CartItem } from "../../types/cartItem.type";
@@ -20,6 +19,7 @@ import { Product } from "../../types/product.type";
 import { Comment } from "../../types/comment.type";
 import http from "../../utils/http";
 import { User } from "../../types/user.type";
+import { formatNumberWithDots } from "../../utils";
 
 const { Text } = Typography;
 const { Panel } = Collapse;
@@ -36,8 +36,8 @@ const OrderListPage: React.FC = () => {
     const fetchOrders = async () => {
       const user = JSON.parse(localStorage.getItem("user") || "{}");
       try {
-        const response = await axios.get(
-          `http://localhost:3001/orders?user.id=${user.id}`
+        const response = await http.get(
+          `/orders?user.id=${user.id}`
         );
         setOrders(response.data);
       } catch (error) {
@@ -51,8 +51,8 @@ const OrderListPage: React.FC = () => {
 
   const handleReviewClick = async (product: CartItem) => {
     try {
-      const response = await axios.get(
-        `http://localhost:3001/products/${product.id}`
+      const response = await http.get(
+        `/products/${product.id}`
       );
       const productData = response.data;
       setSelectedProduct(productData);
@@ -82,7 +82,7 @@ const OrderListPage: React.FC = () => {
           selectedProduct.comments.push(newComment);
         }
 
-        await http.patch(`http://localhost:3001/products/${selectedProduct.id}`, {
+        await http.patch(`/products/${selectedProduct.id}`, {
           comments: selectedProduct.comments,
         });
 
@@ -120,7 +120,7 @@ const OrderListPage: React.FC = () => {
       key: "name",
       render: (name: string, record: CartItem) => (
         <Link to={`/products/${record.id}`}>
-          <Text className="font-medium text-gray-700">{name}</Text>
+          <Text className="font-medium text-gray-700 hover:text-[#3FB871]">{name}</Text>
         </Link>
       ),
     },
@@ -138,7 +138,7 @@ const OrderListPage: React.FC = () => {
       key: "price",
       render: (price: number) => (
         <Text className="text-green-600 font-medium">
-          {price.toLocaleString()} đ
+          {price?.toLocaleString()} đ
         </Text>
       ),
     },
@@ -147,7 +147,7 @@ const OrderListPage: React.FC = () => {
       key: "total",
       render: (_: number, record: CartItem) => (
         <Text className="font-semibold text-green-600">
-          {(record.price * record.quantity).toLocaleString()} đ
+          {(record.price * record.quantity)?.toLocaleString()} đ
         </Text>
       ),
     },
@@ -176,9 +176,15 @@ const OrderListPage: React.FC = () => {
           ]}
         />
       </div>
-      <h2 className="text-2xl font-semibold text-green-600 mb-8 uppercase">
-        Danh sách đơn hàng
-      </h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-semibold text-green-600 mb-8 uppercase">
+          Danh sách đơn hàng
+        </h2>
+        <div className="flex gap-2 py-1 px-4 border rounded text-[#3FB871]">
+          <p className="">Tổng chi tiêu:</p>
+          <p>{formatNumberWithDots(orders.reduce( (sum, item) => sum + item.total , 0))} đ</p>
+        </div>
+      </div>
 
       {loading ? (
         <div className="text-center text-lg">Đang tải dữ liệu...</div>
@@ -199,7 +205,7 @@ const OrderListPage: React.FC = () => {
                     <div className="text-gray-700 font-medium">
                       Tổng:{" "}
                       <span className="text-green-600 font-semibold">
-                        {order.total.toLocaleString()} đ
+                        {order.total?.toLocaleString()} đ
                       </span>
                     </div>
                   </div>

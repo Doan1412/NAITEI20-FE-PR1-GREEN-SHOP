@@ -4,7 +4,7 @@ import { Product } from "../types/product.type";
 export const applyFilters = (products: Product[], filters: FilterParams): Product[] => {
   const filteredProducts = products.filter((product: Product) => {
     const matchesSubcategory = !filters.subcategory ||
-      product.categories?.lv1 === `${filters.subcategory}`;
+      product.category?.lv1 === `${filters.subcategory}`;
 
     const matchesQuery =
       !filters.query ||

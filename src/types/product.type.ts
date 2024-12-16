@@ -6,9 +6,9 @@ export interface Product {
   oldPrice?: number;
   rating: number;
   images: string[];
-  categories: {
-    lv0: string;
-    lv1: string;
+  category: {
+    lv0?: string;
+    lv1?: string;
   };
   color: string;
   description: string;

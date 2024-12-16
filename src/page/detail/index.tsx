@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Divider, Input, message, Rate, Tabs, TabsProps } from 'antd'
-import { HeartFilled, SearchOutlined, RightOutlined, LeftOutlined, ShareAltOutlined } from "@ant-design/icons"
+import { RightOutlined, LeftOutlined, ShareAltOutlined } from "@ant-design/icons"
 import http from '../../utils/http'
 import { formatNumberWithDots } from '../../utils';
 import { useNavigate, useParams } from 'react-router';
@@ -10,13 +10,11 @@ import ProductCard from '../../components/ProductCard';
 import CommentItem from '../../components/CommentItem';
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
-
-// interface IDetailProduct {
-//   product:
-// }
+import { productDefault } from '../../mock/cardProduct.data';
+import { useLoadingStore } from '../../stores/loadingStore';
 
 function DetailProduct() {
-  const [product, setProduct] = useState<Product>();
+  const [product, setProduct] = useState<Product>(productDefault);
   const [quantity, setQuantity] = useState<number>(1);
   const [hoverImage, setHoverImage] = useState<string>('s');
   const [activeImage, setActiveImage] = useState<string>('/images/spx2-4.png');
@@ -24,34 +22,56 @@ function DetailProduct() {
   const [listProduct, setListProduct] = useState<Product[]>([]);
   const [currentPagination, setCurrentPagination] = React.useState(1);
   const [showProduct, setShowProduct] = React.useState<Product[]>([]);
-  const { addToCart } = useCart();
+  const { addToCart, handleBuyNow } = useCart();
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
+  const { setIsLoading } = useLoadingStore()
 
   const getDetailProduct = async () => {
     try {
+      setIsLoading(true);
       const response = await http.get(`/products/${id}`);
       setProduct(response.data);
       setActiveImage(response.data.images[0]);
+      setHoverImage(response.data.images[0]);
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
+  }
+
+  const filteredProducts = (products: Product[], item: Product) => {
+    return products.filter((product) => {
+      const lv0A = item.category?.lv0;
+      const lv1A = item.category?.lv1;
+      const lv0 = product.category?.lv0;
+      const lv1 = product.category?.lv1;
+
+      return (lv0 && (lv0 === lv0A || lv0 === lv1A)) || (lv1 && (lv1 === lv0A || lv1 === lv1A));
+    });
   }
 
   const getListProduct = async () => {
     try {
+      setIsLoading(true);
       const response = await http.get('/products');
-      setListProduct(response.data);
-      setShowProduct(response.data.slice((currentPagination - 1) * 4, currentPagination * 4));
+      setListProduct(filteredProducts(response.data, product));
+      setShowProduct(filteredProducts(response.data, product).slice((currentPagination - 1) * 4, currentPagination * 4));
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
   useEffect(() => {
-    getDetailProduct()
-    getListProduct()
-  }, []);
+    getDetailProduct();
+  }, [id]);
+
+  useEffect(() => {
+    getListProduct();
+  }, [id, product])
 
   useEffect(() => {
     setShowProduct(listProduct.slice((currentPagination - 1) * 4, currentPagination * 4));
@@ -129,7 +149,7 @@ function DetailProduct() {
         </div>
         <div className="w-2/3">
           <p>{product?.name}</p>
-          <Rate disabled defaultValue={product?.rating} />
+          <Rate disabled defaultValue={product?.rating} value={product?.rating} />
           <div className="flex items-center gap-3">
             <p className="text-[#E50914]">{formatNumberWithDots(product?.price || 0)} VND</p>
             { product?.oldPrice && (<div className="text-xs line-through text-[#898989]">{formatNumberWithDots(product?.oldPrice)} VND</div>)}
@@ -157,36 +177,33 @@ function DetailProduct() {
           </div>
           <Divider/>
           <div className="flex items-center gap-3 relative">
-            <Button className="bg-[#3FB871] text-white rounded-3xl px-7 py-5" onClick={handleAddToCart}>Mua ngay</Button>
-            <div className="p-1 border w-[40px] h-[40px] flex items-center justify-center rounded-full cursor-pointer transition hover:bg-[#3FB871] group">
-              <SearchOutlined style={{fontSize: '12px'}} className="group-hover:text-white" />
+            <Button className="text-[#3FB871] rounded-3xl px-7 py-5 border-" onClick={handleAddToCart}>Thêm vào giỏ hàng</Button>
+            <Button className="bg-[#3FB871] text-white rounded-3xl px-7 py-5" onClick={(e) => handleBuyNow(product, e)}>Mua ngay</Button>
+            <div className="relative group">
+              <div className="p-1 border w-[40px] h-[40px] flex items-center justify-center rounded-full cursor-pointer group-hover:bg-[#3FB871]">
+                <ShareAltOutlined className="group-hover:text-white" />
+              </div>
+              <ShareSocial 
+                url ={`http://localhost:5173/products/${id}`}
+                socialTypes={['facebook']}
+                style={{
+                  root: {
+                    padding: 0,
+                    height: '40px',
+                    width: '40px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    position: 'absolute',
+                    left: '-5px',
+                    top: '-1px',
+                    opacity: 0
+                  },
+                  copyContainer: {
+                    // display: 'none'
+                  }
+                }}
+              />
             </div>
-            <div className="p-1 border w-[40px] h-[40px] flex items-center justify-center rounded-full cursor-pointer hover:bg-[#3FB871] group">
-              <HeartFilled style={{fontSize: '12px'}} className="group-hover:text-white" />
-            </div>
-            <div className="p-1 border w-[40px] h-[40px] flex items-center justify-center rounded-full cursor-pointer hover:bg-[#3FB871] group">
-              <ShareAltOutlined />
-            </div>
-            <ShareSocial 
-              url ={`http://localhost:5173/products/${id}`}
-              socialTypes={['facebook']}
-              style={{
-                root: {
-                  padding: 0,
-                  height: '40px',
-                  width: '40px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  position: 'absolute',
-                  left: '230px',
-                  top: '-1px',
-                  opacity: 0
-                },
-                copyContainer: {
-                  display: 'none'
-                }
-              }}
-            />
           </div>
         </div>
       </div >
@@ -220,7 +237,7 @@ function DetailProduct() {
             defaultActiveKey="1"
             items={[
               {
-                label: 'Sản phẩm khuyến mãi',
+                label: 'Sản phẩm cùng loại',
                 key: '1',
                 children:
                 (<div className="flex flex-wrap gap-9">

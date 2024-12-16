@@ -1,2 +1,2 @@
-import SuccessPage from './page'
+import SuccessPage from './page.tsx'
 export default SuccessPage
