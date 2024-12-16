@@ -66,7 +66,7 @@ const UserProfile = () => {
   }
 
   return (
-    <div className="w-full max-w-5xl mx-auto">
+    <div className="w-full max-w-5xl min-h-screen mx-auto">
       <div className="mb-16">
         <Breadcrumb
           items={[

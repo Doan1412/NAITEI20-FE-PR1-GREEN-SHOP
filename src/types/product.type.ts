@@ -6,7 +6,10 @@ export interface Product {
   oldPrice?: number;
   rating: number;
   images: string[];
-  category: string;
+  categories: {
+    lv0: string;
+    lv1: string;
+  };
   color: string;
   description: string;
   commonName: string;
