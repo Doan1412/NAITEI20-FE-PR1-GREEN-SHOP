@@ -1,10 +1,10 @@
 import React from "react";
-import { Button, message, Rate } from "antd";
+import { Button, Rate } from "antd";
 import { Product } from "../types/product.type";
 import { SearchOutlined } from "@ant-design/icons";
 import { NavLink, useNavigate } from "react-router";
 import { useCart } from "../contexts/CartContext";
-import { useAuth } from "../contexts/AuthContext";
+import { CartItem } from "../types/cartItem.type";
 interface ProductCardProps {
   product: Product;
   className?: string;
@@ -12,17 +12,19 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, className, showDiscount = true }) => {
-  const { addToCart } = useCart();
-  const { isLoggedIn } = useAuth();
+  const { deletePaymentList, addToPaymentList } = useCart();
   const navigate = useNavigate();
-
-  const handleAddToCart = (p: Product) => {
-    if (!isLoggedIn) {
-      message.error('Please login to add product to cart');
-      navigate('/login');
-      return;
-    }
-    addToCart(p);
+  
+    const handleBuyNow = (product: Product, e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+      const convertedCard: CartItem = {
+        ...product,
+        image: product?.images?.[0],
+        quantity: 1
+      }
+      deletePaymentList();
+      addToPaymentList([convertedCard]);
+      navigate("/payments");
+      e.preventDefault()
   }
 
   return (
@@ -37,7 +39,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className, showDisco
         <div className="hidden absolute inset-0 bg-[#000] z-10 bg-opacity-40 group-hover:block rounded">
           <div className="rounded-full w-[40px] h-[40px] text-sm bg-[#22c55e] text-white flex justify-center items-center mt-4 ml-4">New</div>
           <div className="flex items-center justify-center mt-[25%] gap-3">
-            <Button type="primary"className="px-5 py-2 rounded-2xl" onClick={() => handleAddToCart(product)}>Mua ngay</Button>
+            <Button type="primary"className="px-5 py-2 rounded-2xl" onClick={(e) => handleBuyNow(product,e)}>Mua ngay</Button>
             <div className="rounded-full bg-white w-[30px] h-[30px] flex justify-center items-center"><SearchOutlined style={{fontSize: "12px"}} /></div>
           </div>
         </div>
@@ -46,14 +48,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className, showDisco
       <div className="my-4 text-center card-content">
         <h3 className="text-lg font-semibold text-gray-700">{product?.name}</h3>
         <div className="flex items-center justify-center mt-2">
-          <Rate disabled defaultValue={product?.rating} />
+          <Rate disabled defaultValue={product?.rating} value={product?.rating} />
         </div>
         <div className="mt-2">
           <span className="text-red-500 text-lg font-bold">
-            {product?.price.toLocaleString()} đ
+            {product?.price?.toLocaleString()} đ
           </span>
           {product?.oldPrice && <span className="text-gray-500 line-through text-sm ml-2">
-            {product?.oldPrice.toLocaleString()} đ
+            {product?.oldPrice?.toLocaleString()} đ
           </span>}
         </div>
       </div>

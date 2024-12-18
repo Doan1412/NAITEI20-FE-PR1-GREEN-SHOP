@@ -5,6 +5,8 @@ import ProductCard from '../components/ProductCard';
 import "../assets/styles/home.scss";
 import { Button, Tabs } from 'antd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import PopupWelcom from '../components/PopupWelcom';
+import { useLoadingStore } from '../stores/loadingStore';
 
 function Home() {
   const [products, setProducts] = React.useState<Product[]>([]);
@@ -12,21 +14,25 @@ function Home() {
   const [bestSellerProduct, setBestSellerProduct] = React.useState<Product[]>([]);
   const [currentPagination, setCurrentPagination] = React.useState(1);
   const [showProduct, setShowProduct] = React.useState<Product[]>([]);
-  const [proCurentPagination, setProCurrentPagination] = React.useState(1);
+  const [proCurrentPagination, setProCurrentPagination] = React.useState(1);
   const [showPromotionalProduct, setShowPromotionalProduct] = React.useState<Product[]>([]);
+  const loadingStore = useLoadingStore()
 
   const getListProduct = async () => {
     try {
+      loadingStore.setIsLoading(true);
       const res = await http.get('/products');
       setProducts(res.data);
       const promotionalProductData = res.data.filter((product: Product) => product.discount > 0);
       const bestSellerProductData = res.data.sort((a: Product, b: Product) => b.sales - a.sales);
       setPromotionalProduct(promotionalProductData);
       setBestSellerProduct(bestSellerProductData);
-      setShowPromotionalProduct(promotionalProductData.slice((proCurentPagination - 1) * 6, proCurentPagination * 6));
+      setShowPromotionalProduct(promotionalProductData.slice((proCurrentPagination - 1) * 6, proCurrentPagination * 6));
       setShowProduct(res.data.slice((currentPagination - 1) * 8, currentPagination * 8));
     } catch (error) {
       console.log(error);
+    } finally {
+      loadingStore.setIsLoading(false);
     }
   }
 
@@ -39,11 +45,12 @@ function Home() {
   },[currentPagination])
 
   useEffect(() => {
-    setShowPromotionalProduct(promotionalProduct.slice((proCurentPagination - 1) * 6, proCurentPagination * 6));
-  },[proCurentPagination])
+    setShowPromotionalProduct(promotionalProduct.slice((proCurrentPagination - 1) * 6, proCurrentPagination * 6));
+  },[proCurrentPagination])
 
   return (
     <div className="max-w-[1140px] mx-auto mb-20">
+      <PopupWelcom />
       <Tabs
         defaultActiveKey="1"
         items={[
@@ -91,7 +98,7 @@ function Home() {
             <Button 
               className="border border-gray-300 px-2.5 rounded-full"
               onClick={() => setProCurrentPagination(prev => Math.max(prev - 1, 1))}
-              disabled={proCurentPagination === 1}
+              disabled={proCurrentPagination === 1}
             >
               <LeftOutlined style={{
                 fontSize: "0.7em"
@@ -100,7 +107,7 @@ function Home() {
             <Button
               className="border border-gray-300 px-2.5 rounded-full"
               onClick={() => setProCurrentPagination(prev => Math.min(prev + 1, Math.ceil(promotionalProduct.length / 6)))}
-              disabled={proCurentPagination === Math.ceil(promotionalProduct.length / 6)}
+              disabled={proCurrentPagination === Math.ceil(promotionalProduct.length / 6)}
             >
               <RightOutlined style={{
                 fontSize: "0.7em"

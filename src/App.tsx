@@ -1,4 +1,4 @@
-import { ConfigProvider } from "antd";
+import { ConfigProvider, App as AppAntd } from "antd";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./page/Login";
 import Signup from "./page/Signup";
@@ -9,9 +9,11 @@ import DetailProduct from "./page/detail";
 import Home from "./page";
 import Contact from "./page/contact";
 import ProductPage from "./page/ProductPage";
-import CartPage from "./page/Cart";
-import SuccessPage from "./page/OrderSuccess";
+import CartPage from "./page/cart";
+import SuccessPage from "./page/orderSuccess";
 import OrderListPage from "./page/OrderListPage";
+import Payments from "./page/payment";
+import LoadingCommon from "./components/LoadingCommon";
 
 const router = createBrowserRouter([
   {
@@ -57,6 +59,10 @@ const router = createBrowserRouter([
       {
         path: "/orders",
         element: <OrderListPage />,
+      },
+      {
+        path: "/payments",
+        element: <Payments />,
       }
     ],
   },
@@ -67,13 +73,16 @@ function App() {
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: "#22c55e",
+          colorPrimary: "#22c55e", // Màu chính của theme
         },
       }}
     >
-      <AuthProvider>
+      <AppAntd>
+        <AuthProvider>
+          <LoadingCommon />
           <RouterProvider router={router} />
-      </AuthProvider>
+        </AuthProvider>
+      </AppAntd>
     </ConfigProvider>
   );
 }
