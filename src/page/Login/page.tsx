@@ -16,15 +16,24 @@ const Login = () => {
       message.error("Vui lòng nhập đầy đủ thông tin đăng nhập!");
       return;
     }
-
+  
     setLoading(true);
     try {
       const response = await http.get(
         `/users?email=${username}&password=${password}`
       );
-
+  
       if (response.data.length > 0) {
         const user = response.data[0];
+        if (user.role === 'admin') {
+          login(user.token, user.role, user.id, user.fullName);
+          navigate("/admin");
+          return;
+        }
+        if (user.status === "banned") {
+          message.error("Tài khoản của bạn đã bị chặn. Không thể đăng nhập.");
+          return;
+        }
         login(user.token, user.role, user.id, user.fullName);
         message.success("Đăng nhập thành công!");
         navigate("/");
@@ -36,7 +45,7 @@ const Login = () => {
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   return (
     <div className="w-full max-w-5xl bg-white rounded-lg mx-auto mb-20">

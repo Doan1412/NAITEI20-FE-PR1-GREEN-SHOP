@@ -9,7 +9,8 @@
       "password": "123abc",
       "subscribe": false,
       "token": "b9f726a4-456b-4445-8d53-8f0b41b7475d",
-      "role": "user"
+      "role": "user",
+      "status": "banned"
     },
     {
       "id": "6a9c",
@@ -21,6 +22,139 @@
       "confirmPassword": "123abc",
       "subscribe": true,
       "token": "b9f726a4-456b-4474-8d53-8f0b41b7475d",
+      "role": "user"
+    },
+    {
+      "id": "7d3f",
+      "fullName": "Trần Thị B",
+      "phoneNumber": "0987654321",
+      "email": "tranb@gmail.com",
+      "website": "https://www.example.com",
+      "password": "password123",
+      "subscribe": true,
+      "token": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "role": "user",
+      "status": "banned"
+    },
+    {
+      "id": "8e4g",
+      "fullName": "Lê Văn C",
+      "phoneNumber": "0123456789",
+      "email": "admin@mail.com",
+      "website": "https://www.example.org",
+      "password": "admin123",
+      "subscribe": false,
+      "token": "b2c3d4e5-f6g7-8901-hijk-lm2345678901",
+      "role": "admin"
+    },
+    {
+      "id": "9f5a",
+      "fullName": "Hoàng Thị H",
+      "phoneNumber": "0934567890",
+      "email": "hoangh@gmail.com",
+      "website": "https://www.hoangh.com",
+      "password": "abc123456",
+      "subscribe": true,
+      "token": "d1e2f3a4-4567-8890-8abc-ef1234567891",
+      "role": "user"
+    },
+    {
+      "id": "a2b3c",
+      "fullName": "Trần Văn T",
+      "phoneNumber": "0987654322",
+      "email": "tranvt@gmail.com",
+      "website": "https://www.tranvt.com",
+      "password": "abcd1234",
+      "subscribe": false,
+      "token": "e2f3a4b5-6789-1234-5678-90abcdef1234",
+      "role": "user"
+    },
+    {
+      "id": "b3c4d",
+      "fullName": "Nguyễn Thị P",
+      "phoneNumber": "0789012345",
+      "email": "nguyenthip@gmail.com",
+      "website": "https://www.nguyenthip.com",
+      "password": "xyz123456",
+      "subscribe": true,
+      "token": "f3a4b5c6-7890-1234-abcd-ef1234567892",
+      "role": "user"
+    },
+    {
+      "id": "c4d5e",
+      "fullName": "Lê Thị H",
+      "phoneNumber": "0912345678",
+      "email": "leth@gmail.com",
+      "website": "https://www.leth.com",
+      "password": "password789",
+      "subscribe": false,
+      "token": "a3b4c5d6-1234-5678-9abc-def1234567893",
+      "role": "user"
+    },
+    {
+      "id": "d5e6f",
+      "fullName": "Hoàng Văn K",
+      "phoneNumber": "0847654321",
+      "email": "hoangvk@gmail.com",
+      "website": "https://www.hoangvk.com",
+      "password": "123456abc",
+      "subscribe": true,
+      "token": "b4c5d6e7-8901-2345-6789-abcd12345678",
+      "role": "user"
+    },
+    {
+      "id": "e6f7a",
+      "fullName": "Trần Văn L",
+      "phoneNumber": "0765432109",
+      "email": "tranvl@gmail.com",
+      "website": "https://www.tranvl.com",
+      "password": "password321",
+      "subscribe": false,
+      "token": "c5d6e7f8-2345-6789-abcdef-123456789012",
+      "role": "admin"
+    },
+    {
+      "id": "f7a8b",
+      "fullName": "Lê Văn H",
+      "phoneNumber": "0976543210",
+      "email": "levanh@gmail.com",
+      "website": "https://www.levanh.com",
+      "password": "456789abc",
+      "subscribe": true,
+      "token": "d6e7f8a9-3456-7890-1234-abcd56789012",
+      "role": "user"
+    },
+    {
+      "id": "8g9h0i",
+      "fullName": "Nguyễn Thị L",
+      "phoneNumber": "0654321098",
+      "email": "nguyenthil@gmail.com",
+      "website": "https://www.nguyenthil.com",
+      "password": "123456xyz",
+      "subscribe": true,
+      "token": "e7f8a9b0-4567-8901-2345-67890abcdef0",
+      "role": "user"
+    },
+    {
+      "id": "9h0i1j",
+      "fullName": "Trần Thị H",
+      "phoneNumber": "0543210987",
+      "email": "tranth@gmail.com",
+      "website": "https://www.tranth.com",
+      "password": "abcdef123456",
+      "subscribe": false,
+      "token": "f8a9b0c1-5678-9012-3456-78901abcdef1",
+      "role": "user"
+    },
+    {
+      "id": "0i1j2k",
+      "fullName": "Lê Thị T",
+      "phoneNumber": "0432109876",
+      "email": "letht@gmail.com",
+      "website": "https://www.letht.com",
+      "password": "123abc456",
+      "subscribe": true,
+      "token": "a9b0c1d2-6789-0123-4567-89012abcdef2",
       "role": "user"
     }
   ],
@@ -36,7 +170,8 @@
         "/images/spx2-7.png",
         "/images/spx2-9.png",
         "/images/spx2-12.png",
-        "/images/spx2-14.png"
+        "/images/spx2-14.png",
+        "https://res.cloudinary.com/diwxcxhxy/image/upload/v1734581586/spx2-11_teshig.png"
       ],
       "comments": [
         {
@@ -103,15 +238,14 @@
       "discount": 0,
       "sales": 10,
       "category": {
-        "lv0": "Cây để bàn",
-        "lv1": "Cây nhiệt đới"
+        "lv0": "Cây để bàn"
       },
       "color": "Xanh cây",
       "description": "Cây Dạ Lam là loại cây mang đến vẻ đẹp tự nhiên, thường được sử dụng để trang trí bàn làm việc hoặc không gian sống. Cây dễ chăm sóc và phù hợp với nhiều loại ánh sáng.",
       "commonName": "Dạ lam, Huỳnh tinh cảnh, Dong vằn.",
       "scientificName": "Calathea zebrina",
       "plantFamily": "Marantaceae (Củ dong).",
-      "height": "0.8-1.2m",
+      "height": "0.8-1.3m",
       "origin": "Cây dạ lam có nguồn gốc từ Brazil, được du nhập và phân bố rộng khắp ở Việt Nam.",
       "describe": "Cây mọc thành bụi thưa, thân vươn thẳng với chiều cao cây trung bình từ 0,8-1,2m. Lá hình trứng, mép lá nguyên, gân lá nổi rõ, phiến rộng khoảng từ 15-20cm. Lá có màu xanh đậm ở mặt trên, quanh gân lá có màu trắng sữa; mặt dưới lá nhạt màu hơn. Lá cây dạ lam mọc cách, cuống lá dài khi rụng để lại các khía màu nâu nhạt. Cây dạ lam thuộc loại cây chịu bóng bán phần hoặc hoàn toàn, nhu cầu nước tương đối cao. Cây được nhân giống từ tách bụi, cây mọc khỏe, tốc độ sinh trưởng nhanh với sức sống mạnh. Đây là loại cây có dáng đẹp, màu lá mướt mát, tươi khỏe, cây rất phù hợp trồng trang trí nội thất-văn phòng. Ngoài ra, cây còn có đặc điểm lọc khí, làm xanh mát môi trường, giúp điều hòa không khí, đặc biệt tốt cho những môi trường thường xuyên sử dụng các loại máy móc tăng nhiệt. Có thể bày cây ở hành lang hay ở giữa sảnh, đặt ở cạnh bàn làm việc hoặc trang trí các góc phòng có diện tích trung bình."
     },
