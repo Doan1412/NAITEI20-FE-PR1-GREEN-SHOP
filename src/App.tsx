@@ -14,6 +14,9 @@ import SuccessPage from "./page/orderSuccess";
 import OrderListPage from "./page/OrderListPage";
 import Payments from "./page/payment";
 import LoadingCommon from "./components/LoadingCommon";
+import AdminLayout from "./layouts/Admin/Layout";
+import UserManagement from "./page/UserManagement/page";
+import ProductManagement from "./page/ProductManagement/page";
 
 const router = createBrowserRouter([
   {
@@ -66,6 +69,24 @@ const router = createBrowserRouter([
       }
     ],
   },
+  {
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+      {
+        path: "dashboard",
+        element: <>Dashboard</>,
+      },
+      {
+        path: "users",
+        element: <UserManagement />,
+      },
+      {
+        path: "products",
+        element: <ProductManagement />,
+      }
+    ],
+  }
 ]);
 
 function App() {

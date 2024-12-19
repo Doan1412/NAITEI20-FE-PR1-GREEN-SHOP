@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import { Button, Input, Form, Checkbox, Breadcrumb, message } from "antd";
 import { Link, useNavigate } from "react-router";
-import { User } from "../../types/user.type";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { v4 as uuidv4 } from "uuid";
 import http from "../../utils/http";
 
 const Register = () => {
   const navigation = useNavigate();
-  const [formData, setFormData] = useState<User>({
+  const [formData, setFormData] = useState({
     id: 0,
     fullName: "",
     phoneNumber: "",

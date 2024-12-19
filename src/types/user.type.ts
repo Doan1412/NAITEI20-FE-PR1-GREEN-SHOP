@@ -7,4 +7,6 @@ export type User = {
   password: string;
   confirmPassword: string;
   subscribe: boolean;
+  status: string;
+  role: string;
 };
