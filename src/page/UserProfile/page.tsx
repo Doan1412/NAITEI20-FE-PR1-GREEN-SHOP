@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Button, Input, Form, Breadcrumb, message } from "antd";
+import { Button, Input, Form, Breadcrumb, message, Upload } from "antd";
 import { Link, useNavigate } from "react-router-dom";
+import { CameraOutlined } from "@ant-design/icons";
 import http from "../../utils/http";
 import { User } from "../../types/user.type";
 import { getUserInfo } from "../../api/userApi";
+import axios from "axios";
+import Avatar from "../../assets/images/avatar.png";
 
 const UserProfile = () => {
   const [userInfo, setUserInfo] = useState<User | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const navigation = useNavigate();
+  const [form] = Form.useForm();
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -17,6 +21,7 @@ const UserProfile = () => {
         try {
           const response = await getUserInfo(token);
           setUserInfo(response[0]);
+          form.setFieldsValue(response[0]);
         } catch {
           message.error("Đã xảy ra lỗi khi tải thông tin người dùng!");
         }
@@ -27,7 +32,7 @@ const UserProfile = () => {
     };
 
     fetchUserInfo();
-  }, [navigation]);
+  }, [form, navigation]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -40,24 +45,57 @@ const UserProfile = () => {
     });
   };
 
+  const handleAvatarChange = async (file: File) => {
+    if (!file) {
+      message.error("Vui lòng chọn ảnh để tải lên!");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append('upload_preset', import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
+    try {
+      const response = await axios.post(
+        `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`,
+        formData
+      );
+
+      if (response.data.secure_url) {
+        setUserInfo({ ...userInfo, avatar: response.data.secure_url } as User);
+        message.success("Tải lên avatar thành công!");
+      } else {
+        message.error("Tải lên avatar thất bại!");
+      }
+    } catch {
+      message.error("Đã xảy ra lỗi khi tải lên avatar!");
+    }
+  };
+
+  const beforeUpload = (file: File) => {
+    handleAvatarChange(file);
+    return false;
+  };
+
   const handleSaveChanges = async () => {
     const token = localStorage.getItem("token");
     if (!userInfo) return;
+
     try {
-      const response = await http.put(`/users/${userInfo.id}`, 
-        {
+      const isValid = await form.validateFields();
+      if (isValid) {
+        const response = await http.put(`/users/${userInfo.id}`, {
           ...userInfo,
-          token
+          token,
+        });
+        if (response.status === 200) {
+          message.success("Cập nhật thông tin thành công!");
+          setIsEditing(false);
+        } else {
+          message.error("Cập nhật thông tin không thành công!");
         }
-      );
-      if (response.status === 200) {
-        message.success("Cập nhật thông tin thành công!");
-        setIsEditing(false);
-      } else {
-        message.error("Cập nhật thông tin không thành công!");
       }
     } catch {
-      message.error("Đã xảy ra lỗi khi cập nhật thông tin!");
+      message.error("Vui lòng kiểm tra lại thông tin của bạn!");
     }
   };
 
@@ -70,12 +108,8 @@ const UserProfile = () => {
       <div className="mb-16">
         <Breadcrumb
           items={[
-            {
-              title: <Link to="/">Home</Link>,
-            },
-            {
-              title: <div className="text-green-600">Thông Tin Cá Nhân</div>,
-            },
+            { title: <Link to="/">Home</Link> },
+            { title: <div className="text-green-600">Thông Tin Cá Nhân</div> },
           ]}
         />
       </div>
@@ -85,9 +119,38 @@ const UserProfile = () => {
           <h2 className="text-2xl font-semibold text-green-600 mb-6">
             THÔNG TIN CÁ NHÂN
           </h2>
-          <Form layout="vertical">
+          <Form form={form} layout="vertical">
+            <Form.Item>
+              <div className="flex flex-col items-center gap-4 relative">
+                <img
+                  src={userInfo?.avatar || Avatar}
+                  alt="Avatar"
+                  referrerPolicy="no-referrer" 
+                  className="w-40 h-40 object-cover rounded-full border"
+                />
+                {isEditing && (
+                  <Upload
+                    showUploadList={false}
+                    beforeUpload={beforeUpload}
+                    className="absolute bottom-0 left-[53%]"
+                  >
+                    <Button
+                      icon={<CameraOutlined />}
+                      shape="circle"
+                      size="large"
+                      className="bg-green-600 text-white"
+                    />
+                  </Upload>
+                )}
+              </div>
+            </Form.Item>
+
             <div className="grid grid-cols-2 gap-6">
-              <Form.Item label="Họ và tên">
+              <Form.Item
+                label="Họ và tên"
+                name="fullName"
+                rules={[{ required: true, message: "Họ và tên là bắt buộc!" }]}
+              >
                 <Input
                   name="fullName"
                   value={userInfo.fullName}
@@ -97,7 +160,14 @@ const UserProfile = () => {
                 />
               </Form.Item>
 
-              <Form.Item label="Số ĐT">
+              <Form.Item
+                label="Số ĐT"
+                name="phoneNumber"
+                rules={[
+                  { required: true, message: "Số điện thoại là bắt buộc!" },
+                  { pattern: /^[0-9]+$/, message: "Số điện thoại không hợp lệ!" },
+                ]}
+              >
                 <Input
                   name="phoneNumber"
                   value={userInfo.phoneNumber}
@@ -107,7 +177,14 @@ const UserProfile = () => {
                 />
               </Form.Item>
 
-              <Form.Item label="Địa chỉ email">
+              <Form.Item
+                label="Địa chỉ email"
+                name="email"
+                rules={[
+                  { required: true, message: "Email là bắt buộc!" },
+                  { type: "email", message: "Email không hợp lệ!" },
+                ]}
+              >
                 <Input
                   name="email"
                   value={userInfo.email}
@@ -117,7 +194,7 @@ const UserProfile = () => {
                 />
               </Form.Item>
 
-              <Form.Item label="Website của bạn">
+              <Form.Item label="Website của bạn" name="website">
                 <Input
                   name="website"
                   value={userInfo.website}

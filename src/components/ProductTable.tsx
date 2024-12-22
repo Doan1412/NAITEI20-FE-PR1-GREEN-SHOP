@@ -7,9 +7,13 @@ import CategorySelector from './CategorySelector';
 import { Category } from '../types/category.type';
 import { SelectedCategory } from './CategorySelector';
 import ImageUploader from './ImageUploader';
+import { Order } from '../types/order.type';
 
+const { Search } = Input;
 const ProductTable: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [form] = Form.useForm();
@@ -17,12 +21,18 @@ const ProductTable: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<SelectedCategory>({ lv0: '', lv1: '' });
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchText, setSearchText] = useState<string>('');
 
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const response = await http.get('/products');
-      setProducts(response.data);
+      const [productsRes, ordersRes] = await Promise.all([
+        http.get("/products"),
+        http.get("/orders"),
+      ]);
+      setProducts(productsRes.data);
+      setFilteredProducts(productsRes.data);
+      setOrders(ordersRes.data);
     } catch {
       message.error('Không thể lấy danh sách sản phẩm.');
     } finally {
@@ -44,6 +54,14 @@ const ProductTable: React.FC = () => {
     fetchCategories();
   }, []);
 
+  const handleSearch = (value: string) => {
+    setSearchText(value);
+    const filtered = products.filter((product) =>
+      product.name?.toLowerCase().includes(searchText.toLowerCase())
+    );
+    setFilteredProducts(filtered);
+  };
+
   const openModal = (product?: Product) => {
     setEditingProduct(product || null);
     form.resetFields();
@@ -63,6 +81,13 @@ const ProductTable: React.FC = () => {
     setIsModalOpen(false);
   };
 
+  const calculateSales = (productId: string) => {
+    return orders.reduce((total, order) => {
+      const product = order.products.find((prod) => prod.id === productId);
+      return total + (product ? product.quantity : 0);
+    }, 0);
+  };  
+
   const handleSave = async () => {
     try {
       const values = await form.validateFields();
@@ -75,17 +100,23 @@ const ProductTable: React.FC = () => {
           discount: editingProduct.discount,
           oldPrice: editingProduct.oldPrice,
         };
-
+  
         await http.put(`/products/${editingProduct.id}`, updatedProduct);
-        setProducts((prev) =>
-          prev.map((prod) =>
+        setProducts((prev) => {
+          const updatedProducts = prev.map((prod) =>
             prod.id === editingProduct.id ? { ...prod, ...updatedProduct } : prod
-          )
-        );
+          );
+          setFilteredProducts(updatedProducts);
+          return updatedProducts;
+        });
         message.success('Cập nhật sản phẩm thành công.');
       } else {
         const response = await http.post('/products', { ...values, id: String(Date.now()) });
-        setProducts((prev) => [...prev, response.data]);
+        setProducts((prev) => {
+          const newProducts = [...prev, response.data];
+          setFilteredProducts(newProducts);
+          return newProducts;
+        });
         message.success('Thêm sản phẩm mới thành công.');
       }
       closeModal();
@@ -93,11 +124,13 @@ const ProductTable: React.FC = () => {
       message.error('Không thể lưu sản phẩm.');
     }
   };
+  
 
   const handleDelete = async (id: string) => {
     try {
       await http.delete(`/products/${id}`);
       setProducts((prev) => prev.filter((product) => product.id !== id));
+      setFilteredProducts((prev) => prev.filter((product) => product.id !== id));
       message.success('Xóa sản phẩm thành công.');
     } catch {
       message.error('Không thể xóa sản phẩm.');
@@ -120,19 +153,22 @@ const ProductTable: React.FC = () => {
       title: 'Tên sản phẩm',
       dataIndex: 'name',
       key: 'name',
+      sorter: (a: Product, b: Product) => (a.name || '').localeCompare(b.name || ''),
     },
     {
       title: 'Giá',
       dataIndex: 'price',
       key: 'price',
+      sorter: (a: Product, b: Product) => (a.price || 0) - (b.price || 0),
       render: (price: number) => `${price.toLocaleString()} VND`,
     },
     {
-      title: 'Giá cũ',
-      dataIndex: 'oldPrice',
-      key: 'oldPrice',
-      render: (oldPrice: number) =>
-        oldPrice ? `${oldPrice.toLocaleString()} VND` : '-',
+      title: 'Số lượng đã bán',
+      key: 'sales',
+      sorter: (a: Product, b: Product) => calculateSales(a.id || '') - calculateSales(b.id || ''),
+      render: (_: string, record: Product) => {
+        return calculateSales(record.id || '');
+      },
     },
     {
       title: 'Danh mục',
@@ -162,7 +198,7 @@ const ProductTable: React.FC = () => {
           </Button>
           <Popconfirm
             title="Bạn có chắc chắn muốn xóa sản phẩm này không?"
-            onConfirm={() => handleDelete(record.id)}
+            onConfirm={() => record.id && handleDelete(record.id)}
           >
             <Button icon={<DeleteOutlined />} danger type="link">
               Xóa
@@ -175,7 +211,13 @@ const ProductTable: React.FC = () => {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
+      <div className="flex justify-between">
+        <Search
+          placeholder="Tìm kiếm sản phẩm"
+          allowClear
+          onSearch={handleSearch}
+          style={{ width: 300 }}
+        />
         <Button
           type="primary"
           icon={<PlusOutlined />}
@@ -185,7 +227,7 @@ const ProductTable: React.FC = () => {
         </Button>
       </div>
       <Table
-        dataSource={products}
+        dataSource={filteredProducts}
         columns={columns}
         rowKey="id"
         loading={loading}

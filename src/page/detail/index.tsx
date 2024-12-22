@@ -27,13 +27,21 @@ function DetailProduct() {
   const navigate = useNavigate();
   const { setIsLoading } = useLoadingStore()
 
+  const calculateRating = (comments: Product['comments']) => {
+    if (!comments || comments.length === 0) return 0;
+    const totalRating = comments.reduce((sum, comment) => sum + (comment.rating || 0), 0);
+    return Math.round((totalRating / comments.length) * 10) / 10;
+  };
+
   const getDetailProduct = async () => {
     try {
       setIsLoading(true);
       const response = await http.get(`/products/${id}`);
-      setProduct(response.data);
-      setActiveImage(response.data.images[0]);
-      setHoverImage(response.data.images[0]);
+      const fetchedProduct = response.data;
+      fetchedProduct.rating = calculateRating(fetchedProduct.comments);
+      setProduct(fetchedProduct);
+      setActiveImage(fetchedProduct.images[0]);
+      setHoverImage(fetchedProduct.images[0]);
     } catch (error) {
       console.log(error);
     } finally {
@@ -119,7 +127,7 @@ function DetailProduct() {
       key: '2',
       label: 'KHÁCH HÀNG ĐÁNH GIÁ',
       children: (
-        product?.comments.map((comment) => (<CommentItem key={comment.id} comment={comment} />))
+        product?.comments?.map((comment) => (<CommentItem key={comment.id} comment={comment} />))
       ),
     }
   ];
@@ -131,7 +139,7 @@ function DetailProduct() {
           <img src={hoverImage || activeImage} width={520} className="w-[520px] h-[400px]" alt={product?.name} />
           <div className="flex items-center gap-3 mt-8">
             {
-              product?.images.map((image, index) => (
+              product?.images?.map((image, index) => (
                 <img
                   src={image}
                   alt="image"
@@ -149,7 +157,7 @@ function DetailProduct() {
         </div>
         <div className="w-2/3">
           <p>{product?.name}</p>
-          <Rate disabled defaultValue={product?.rating} value={product?.rating} />
+          <Rate allowHalf disabled defaultValue={product?.rating} value={product?.rating} />
           <div className="flex items-center gap-3">
             <p className="text-[#E50914]">{formatNumberWithDots(product?.price || 0)} VND</p>
             { product?.oldPrice && (<div className="text-xs line-through text-[#898989]">{formatNumberWithDots(product?.oldPrice)} VND</div>)}

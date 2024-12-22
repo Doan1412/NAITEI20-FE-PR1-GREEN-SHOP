@@ -3,20 +3,22 @@ import { Product } from "../../types/product.type";
 import { FilterParams } from "../../types/filterParams.type";
 import { useFilterParams } from "../../hooks/useFilterParams";
 import FilterBar from "../../components/FilterBar";
-import { Breadcrumb, Pagination } from "antd";
+import { Breadcrumb, Button, Pagination } from "antd";
 import ProductItem from "../../components/ProductItem";
 import SortBar from "../../components/SortBar";
 import { fetchProducts } from "../../api/productApi";
 import Banner from "../../assets/images/list_product_banner.jpg";
 import { Link } from "react-router-dom";
 import ProductCard from "../../components/ProductCard";
-
+import NoItems from "../../assets/images/noitems.png"
+import { useFilterContext } from "../../contexts/FilterContext";
 const ProductList = () => {
   const filters = useFilterParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [prevFilters, setPrevFilters] = useState<FilterParams>();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState<number>(9);
+  const { clearFilters } = useFilterContext();
 
   useEffect(() => {
     if (JSON.stringify(filters) !== JSON.stringify(prevFilters)) {
@@ -66,7 +68,23 @@ const ProductList = () => {
           <SortBar />
           <hr />
           {displayedProducts.length === 0 ? (
-            <div>Không tìm thấy sản phẩm nào.</div>
+            <div className="flex flex-col items-center justify-center text-center my-20">
+              <img
+                src={NoItems}
+                alt="No products found"
+                className="w-64 h-64 mb-4"
+              />
+              <h2 className="text-xl font-semibold text-gray-700 mb-4">
+                Không tìm thấy sản phẩm nào
+              </h2>
+              <p className="text-gray-500 mb-6">
+                Chúng tôi rất tiếc, không có sản phẩm phù hợp với tiêu chí của
+                bạn. Hãy thử tìm kiếm lại hoặc thay đổi bộ lọc.
+              </p>
+              <Button className="w-32 h-10" onClick={clearFilters}>
+                Xóa bộ lọc
+              </Button>
+            </div>
           ) : (
             <>
               <div

@@ -12,7 +12,7 @@ import {
   FaSearch,
 } from "react-icons/fa";
 import { RiFileList2Line } from "react-icons/ri";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/images/logo.png";
 import BgHeader from "../assets/images/bg-header.png";
 import { useAuth } from "../contexts/AuthContext";
@@ -25,6 +25,7 @@ const Header: React.FC = () => {
   const { totalQuantity } = useCart();
   const { filters, setFilters } = useFilterContext();
   const [queryParams, setQueryParams] = useState<string>("");
+  const navigation = useNavigate();
 
   useEffect(() => {
     setQueryParams(filters.query || "");
@@ -32,6 +33,7 @@ const Header: React.FC = () => {
 
   const handleSearch = () => {
     setFilters({ ...filters, query: queryParams });
+    navigation("/products");
   };
 
   const handleClear = () => {
@@ -43,6 +45,11 @@ const Header: React.FC = () => {
     if (e.key === "Enter") {
       handleSearch();
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigation("/login");
   };
 
   return (
@@ -116,7 +123,7 @@ const Header: React.FC = () => {
                     <span>Đơn hàng</span>
                   </Link>
                   <button
-                    onClick={logout}
+                    onClick={handleLogout}
                     className="flex items-center justify-center gap-1 hover:text-red-500"
                   >
                     <FaUser />

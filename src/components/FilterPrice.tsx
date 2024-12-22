@@ -19,6 +19,8 @@ const FilterPrice = () => {
     if (filters.price) {
       const selectedRange = priceRanges.find(range => range.min === filters.price?.min && range.max === filters.price?.max);
       setSelectedPriceRange(selectedRange ? selectedRange.label : null);
+    } else {
+      setSelectedPriceRange(null);
     }
   }, [filters]);
 

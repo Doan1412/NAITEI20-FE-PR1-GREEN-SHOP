@@ -19,6 +19,7 @@ import UserManagement from "./page/UserManagement/page";
 import ProductManagement from "./page/ProductManagement/page";
 import Categories from "./page/admin/categories";
 import OrdersManagement from "./page/admin/orders-list";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const router = createBrowserRouter([
   {
@@ -104,15 +105,17 @@ function App() {
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: "#22c55e", // Màu chính của theme
+          colorPrimary: "#22c55e",
         },
       }}
     >
       <AppAntd>
-        <AuthProvider>
-          <LoadingCommon />
-          <RouterProvider router={router} />
-        </AuthProvider>
+        <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID as string}>
+          <AuthProvider>
+            <LoadingCommon />
+            <RouterProvider router={router} />
+          </AuthProvider>
+        </GoogleOAuthProvider>
       </AppAntd>
     </ConfigProvider>
   );

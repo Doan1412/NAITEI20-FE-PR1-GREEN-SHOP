@@ -23,8 +23,8 @@ function Home() {
       loadingStore.setIsLoading(true);
       const res = await http.get('/products');
       setProducts(res.data);
-      const promotionalProductData = res.data.filter((product: Product) => product.discount > 0);
-      const bestSellerProductData = res.data.sort((a: Product, b: Product) => b.sales - a.sales);
+      const promotionalProductData = res.data.filter((product: Product) => (product.discount ?? 0) > 0);
+      const bestSellerProductData = res.data.sort((a: Product, b: Product) => (b.sales ?? 0) - (a.sales ?? 0));
       setPromotionalProduct(promotionalProductData);
       setBestSellerProduct(bestSellerProductData);
       setShowPromotionalProduct(promotionalProductData.slice((proCurrentPagination - 1) * 6, proCurrentPagination * 6));

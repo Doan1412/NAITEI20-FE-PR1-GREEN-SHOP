@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Button, Rate } from "antd";
 import { Product } from "../types/product.type";
 import { SearchOutlined } from "@ant-design/icons";
@@ -15,21 +15,32 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className, showDisco
   const { deletePaymentList, addToPaymentList } = useCart();
   const navigate = useNavigate();
   
-    const handleBuyNow = (product: Product, e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-      const convertedCard: CartItem = {
-        ...product,
-        image: product?.images?.[0],
-        quantity: 1
-      }
-      deletePaymentList();
-      addToPaymentList([convertedCard]);
-      navigate("/payments");
-      e.preventDefault()
+  const handleBuyNow = (product: Product, e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    const convertedCard: CartItem = {
+      ...product,
+      id: product.id || '',
+      image: product?.images?.[0] || '',
+      name: product.name || '',
+      quantity: 1,
+      price: product.price ?? 0
+    }
+    deletePaymentList();
+    addToPaymentList([convertedCard]);
+    navigate("/payments");
+    e.preventDefault()
   }
+
+  const calculatedRating = useMemo(() => {
+    if (!product?.comments || product.comments.length === 0) {
+      return 0;
+    }
+    const totalRating = product.comments.reduce((sum, comment) => sum + (comment.rating ?? 0), 0);
+    return totalRating / product.comments.length;
+  }, [product?.comments]);
 
   return (
     <NavLink className={`w-64 bg-white shadow-md rounded-md ${className} relative`} to={`/products/${product?.id}`}>
-      {product?.discount > 0 && showDiscount && <div className="text-sm top-4 left-4 absolute bg-[red] text-white px-2 py-1 rounded-full w-[40px] h-[40px] z-10 flex justify-center items-center">{product?.discount}%</div>}
+      {(product?.discount ?? 0) > 0 && showDiscount && <div className="text-sm top-4 left-4 absolute bg-[red] text-white px-2 py-1 rounded-full w-[40px] h-[40px] z-10 flex justify-center items-center">{product?.discount ?? 0}%</div>}
       <div className="relative group duration-300 transition-all">
         <img
           src={product?.images?.[0] || ''}
@@ -48,7 +59,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className, showDisco
       <div className="my-4 text-center card-content">
         <h3 className="text-lg font-semibold text-gray-700">{product?.name}</h3>
         <div className="flex items-center justify-center mt-2">
-          <Rate disabled defaultValue={product?.rating} value={product?.rating} />
+          <Rate disabled allowHalf defaultValue={calculatedRating} value={calculatedRating} />
         </div>
         <div className="mt-2">
           <span className="text-red-500 text-lg font-bold">
