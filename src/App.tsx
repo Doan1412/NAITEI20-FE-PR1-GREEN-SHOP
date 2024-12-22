@@ -94,7 +94,7 @@ function App() {
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: "#22c55e", // Màu chính của theme
+          colorPrimary: "#22c55e",
         },
       }}
     >

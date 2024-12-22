@@ -12,7 +12,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
     <div className="w-full border rounded flex items-start">
       <img src={product.images[0]} alt={product.name} className="w-56 h-56 mr-4" />
       <div className='p-4'>
-        <NavLink to={`/products/${product?.id}`}>
+        <NavLink to={`/products/${product?.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
           <h3 className="text-lg">{product.name}</h3>
           <Rate disabled defaultValue={product.rating} className="text-xs"/>
           <p className='text-sm mt-1'>{product.description}</p>

@@ -18,6 +18,8 @@ const FilterColor = () => {
   useEffect(() => {
     if (filters.color) {
       setSelectedColor(filters.color);
+    } else {
+      setSelectedColor(null);
     }
   }, [filters]);
 

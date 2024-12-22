@@ -10,8 +10,8 @@ interface CartContextType {
   cart: CartItem[];
   totalQuantity: number;
   addToCart: (product: Product, quantity?: number) => void;
-  updateQuantity: (productId: number, quantity: number) => void;
-  deleteCartItem: (id: number) => void;
+  updateQuantity: (productId: string, quantity: number) => void;
+  deleteCartItem: (id: string) => void;
   deleteAllCartItem: () => void;
   addToPaymentList: (product: CartItem[]) => void;
   getPaymentList: () => CartItem[];
@@ -65,7 +65,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
   
 
-  const updateQuantity = (productId: number, quantity: number) => {
+  const updateQuantity = (productId: string, quantity: number) => {
     if (quantity <= 0) {
       const updatedCart = cart.filter((item) => item.id !== productId);
       saveCartToLocalStorage(updatedCart);
@@ -77,7 +77,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  const deleteCartItem = (id: number) => {
+  const deleteCartItem = (id: string) => {
     setCart((prevCart) => prevCart.filter((item) => item.id !== id));
     saveCartToLocalStorage(cart.filter((item) => item.id !== id));
   };

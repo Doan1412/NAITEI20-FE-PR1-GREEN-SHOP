@@ -9,4 +9,5 @@ export type User = {
   subscribe: boolean;
   status: string;
   role: string;
+  avatar: string;
 };
