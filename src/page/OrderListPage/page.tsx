@@ -66,16 +66,22 @@ const OrderListPage: React.FC = () => {
   const handleOk = async () => {
     if (selectedProduct) {
       const user : User = JSON.parse(localStorage.getItem("user") || "{}");
-      const existingCommentIndex = selectedProduct.comments.findIndex(
-        (comment) => comment.userName === user.fullName
-      );
+      const existingCommentIndex = selectedProduct.comments
+        ? selectedProduct.comments.findIndex(
+            (comment) => comment.userName === user.fullName
+          )
+        : -1;
       const newComment: Comment = {
         id: uuidv4(),
         content: comment,
         userName: user.fullName,
+        avatar: user.avatar,
         rating: rating,
       };
       try {
+        if (!selectedProduct.comments) {
+          selectedProduct.comments = [];
+        }
         if (existingCommentIndex >= 0) {
           selectedProduct.comments[existingCommentIndex] = newComment;
         } else {
@@ -256,7 +262,7 @@ const OrderListPage: React.FC = () => {
       )}
 
       <Modal
-        title="Đánh giá sản phẩm" // Xóa title mặc định vì đã custom trong phần content
+        title="Đánh giá sản phẩm"
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -266,7 +272,7 @@ const OrderListPage: React.FC = () => {
         <div className="mt-7 flex gap-6">
           <div className="w-1/2 flex flex-col items-center gap-4 border-r pr-6">
             <img
-              src={selectedProduct?.images[0]}
+              src={selectedProduct?.images?.[0] || ""}
               alt={selectedProduct?.name}
               className="w-48 h-48 rounded-lg object-cover border border-gray-300 shadow-md"
             />
@@ -275,7 +281,6 @@ const OrderListPage: React.FC = () => {
             </span>
           </div>
 
-          {/* Phần Bên Phải: Đánh giá */}
           <div className="w-1/2 flex flex-col gap-6">
             <div>
               <span className="block mb-2 font-medium text-gray-700">

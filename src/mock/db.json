@@ -22,7 +22,8 @@
       "confirmPassword": "123abc",
       "subscribe": true,
       "token": "b9f726a4-456b-4474-8d53-8f0b41b7475d",
-      "role": "user"
+      "role": "user",
+      "avatar": "https://res.cloudinary.com/diwxcxhxy/image/upload/v1735218126/apps.19803.14091440737260913.640c8664-d8e6-4e53-9e9f-56ccdf4bba10_m2waht.jpg"
     },
     {
       "id": "7d3f",
@@ -45,7 +46,8 @@
       "password": "admin123",
       "subscribe": false,
       "token": "b2c3d4e5-f6g7-8901-hijk-lm2345678901",
-      "role": "admin"
+      "role": "admin",
+      "avatar": "https://res.cloudinary.com/diwxcxhxy/image/upload/v1735052121/oyed_yldosc.png"
     },
     {
       "id": "9f5a",
@@ -56,7 +58,8 @@
       "password": "abc123456",
       "subscribe": true,
       "token": "d1e2f3a4-4567-8890-8abc-ef1234567891",
-      "role": "user"
+      "role": "user",
+      "avatar": "https://res.cloudinary.com/diwxcxhxy/image/upload/v1735052821/wallpaperflare.com_wallpaper_mdqrcp.jpg"
     },
     {
       "id": "a2b3c",
@@ -233,12 +236,20 @@
           "content": "sadf",
           "userName": "Nguyễn Văn D",
           "rating": 3
+        },
+        {
+          "id": "631f140e-007a-47bd-89ff-f1c96bb2e758",
+          "content": "",
+          "userName": "Hoàng Thị H",
+          "avatar": "https://res.cloudinary.com/diwxcxhxy/image/upload/v1735052821/wallpaperflare.com_wallpaper_mdqrcp.jpg",
+          "rating": 3.5
         }
       ],
       "discount": 0,
       "sales": 10,
       "category": {
-        "lv0": "Cây để bàn"
+        "lv0": "Cây để bàn",
+        "lv1": "Cây nội thất"
       },
       "color": "Xanh cây",
       "description": "Cây Dạ Lam là loại cây mang đến vẻ đẹp tự nhiên, thường được sử dụng để trang trí bàn làm việc hoặc không gian sống. Cây dễ chăm sóc và phù hợp với nhiều loại ánh sáng.",
@@ -869,6 +880,12 @@
           "content": "asssss",
           "userName": "Phan Văn Hùng",
           "rating": 3.5
+        },
+        {
+          "id": "9342a80a-844c-479e-b6db-118a59cc7cc5",
+          "content": "cây khá đẹp",
+          "userName": "Lê Văn C",
+          "rating": 5
         }
       ],
       "images": [
@@ -1789,6 +1806,42 @@
       ],
       "total": 275000,
       "date": "2024-12-16T12:41:45.956Z"
+    },
+    {
+      "id": "47e0",
+      "user": {
+        "id": "8e4g",
+        "fullName": "Lê Văn C"
+      },
+      "products": [
+        {
+          "id": "9",
+          "name": "Cây chân chim 2",
+          "price": 250000,
+          "quantity": 1,
+          "image": "/images/spx2-4.png"
+        }
+      ],
+      "total": 275000,
+      "date": "2024-12-26T03:22:39.888Z"
+    },
+    {
+      "id": "7f2c",
+      "user": {
+        "id": "9f5a",
+        "fullName": "Hoàng Thị H"
+      },
+      "products": [
+        {
+          "id": "1",
+          "name": "Cây Dạ Lam",
+          "price": 320000,
+          "quantity": 1,
+          "image": "/images/spx2-5.png"
+        }
+      ],
+      "total": 352000,
+      "date": "2024-12-26T03:24:28.670Z"
     }
   ]
 }

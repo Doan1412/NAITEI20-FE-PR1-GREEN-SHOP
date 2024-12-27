@@ -1,7 +1,7 @@
 import { Product } from "../types/product.type";
 
 const productDefault: Product = {
-  id: 2,
+  id: "2",
   name: "Sản phẩm B",
   price: 200,
   rating: 4.3,
