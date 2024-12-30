@@ -159,7 +159,7 @@ function DetailProduct() {
           <p>{product?.name}</p>
           <Rate allowHalf disabled defaultValue={product?.rating} value={product?.rating} />
           <div className="flex items-center gap-3">
-            <p className="text-[#E50914]">{formatNumberWithDots(product?.price || 0)} VND</p>
+            <p className="E50914]">{formatNumberWithDots(product?.price || 0)} VND</p>
             { product?.oldPrice && (<div className="text-xs line-through text-[#898989]">{formatNumberWithDots(product?.oldPrice)} VND</div>)}
           </div>
           <Divider/>
@@ -249,7 +249,7 @@ function DetailProduct() {
                 key: '1',
                 children:
                 (<div className="flex flex-wrap gap-9">
-                  {showProduct.map((product) => <ProductCard key={product.id} product={product} />)}
+                  {showProduct.map((product) => <ProductCard key={product.id} product={product} className="w-[calc(24%-16px)]" />)}
                 </div>),
               },
             ]}

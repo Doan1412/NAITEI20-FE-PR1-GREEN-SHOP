@@ -13,7 +13,7 @@ const NavbarAdmin = () => {
   }
 
   return (
-    <div className='flex items-center justify-between p-4 dark:bg-dark dark:text-white'>
+    <div className='fixed z-[100] w-full right-0 drop-shadow-md top-0 bg-white flex items-center justify-between p-4 dark:bg-dark dark:text-white'>
       <div className='flex items-center gap-3 justify-end w-full'>
         <div className='flex flex-col'>
           <span className='text-sm leading-3 font-medium'>Admin</span>

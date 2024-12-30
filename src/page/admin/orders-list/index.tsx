@@ -8,7 +8,7 @@ import { formatNumberWithDots } from "../../../utils";
 import { CartItem } from "../../../types/cartItem.type";
 
 const OrdersManagement = () => {
-  const [loading, setLoading] = React.useState(false);
+  const [loading, ] = React.useState(false);
   const [orders, setOrders] = React.useState<Order[]>([]);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [open, setOpen] = React.useState(false);
@@ -82,7 +82,7 @@ const OrdersManagement = () => {
     {
       title: "",
       key: "action",
-      render: (_: any, record: Order) => (
+      render: (_: string, record: Order) => (
         <div>
           <Button type="primary" className="mr-2" onClick={() => viewDetail(record.id)}>
             Xem chi tiết

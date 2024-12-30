@@ -14,7 +14,7 @@ enum EMode {
 
 const CategoriesManagement = () => {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, ] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [openSubCategoriesModal, setOpenSubCategoriesModal] = useState(false);
   const [currentSubCategories, setCurrentSubCategories] = useState<Category[]>([]);

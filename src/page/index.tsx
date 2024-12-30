@@ -123,7 +123,7 @@ function Home() {
                 key: '1',
                 children:
                 (<div className="flex flex-wrap gap-9">
-                  {showPromotionalProduct.map((product) => <ProductCard key={product.id} product={product} showDiscount />)}
+                  {showPromotionalProduct.map((product) => <ProductCard key={product.id} product={product} showDiscount className='w-[calc(32%-16px)]' />)}
                 </div>),
               },
             ]}
@@ -167,7 +167,7 @@ function Home() {
                 key: '1',
                 children:
                 (<div className="flex flex-wrap gap-9">
-                  {showProduct.map((product) => <ProductCard key={product.id} product={product} />)}
+                  {showProduct.map((product) => <ProductCard key={product.id} product={product} className='w-[calc(24%-16px)]' />)}
                 </div>),
               },
             ]}

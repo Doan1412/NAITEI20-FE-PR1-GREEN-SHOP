@@ -20,6 +20,7 @@ import ProductManagement from "./page/ProductManagement/page";
 import Categories from "./page/admin/categories";
 import OrdersManagement from "./page/admin/orders-list";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import Dashboard from "./page/admin";
 
 const router = createBrowserRouter([
   {
@@ -77,8 +78,8 @@ const router = createBrowserRouter([
     element: <AdminLayout />,
     children: [
       {
-        path: "dashboard",
-        element: <>Dashboard</>,
+        path: "",
+        element: <Dashboard/>,
       },
       {
         path: "users",
