@@ -169,7 +169,7 @@ const OrderListPage: React.FC = () => {
   ];
 
   return (
-    <div className="container mx-auto mt-5 min-h-screen w-3/4">
+    <div className="container mx-auto my-5 min-h-screen w-3/4">
       <div className="mb-16">
         <Breadcrumb
           items={[

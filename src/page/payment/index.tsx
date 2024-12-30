@@ -1,12 +1,15 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { FaTrashCan } from 'react-icons/fa6';
 import { CartItem } from '../../types/cartItem.type';
 import { Link, useNavigate } from 'react-router-dom';
-import { Breadcrumb, Button, message, Table, Typography } from 'antd'
+import { Breadcrumb, Button, message, Modal, Table, Typography } from 'antd'
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
 import http from '../../utils/http';
 import { useLoadingStore } from '../../stores/loadingStore';
+import { MoneyCollectOutlined } from '@ant-design/icons';
+import { vouchers } from '../../mock/voucher.data';
+import { Voucher } from '../../types/order.type';
 
 function Payment() {
   const { Text } = Typography;
@@ -21,7 +24,10 @@ function Payment() {
     0
   );
   const tax = totalBeforeTax * vat;
-  const totalAfterTax = totalBeforeTax + tax;
+  // const totalAfterTax = totalBeforeTax + tax;
+  const [totalAfterTax, setTotalAfterTax] = useState(totalBeforeTax + tax);
+  const [voucher, setVoucher] = useState<Voucher>();
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
@@ -118,6 +124,20 @@ function Payment() {
     },
   ];
 
+  const handleApplyVoucher = (item: Voucher) => {
+    if (item.code === voucher?.code) {
+      setVoucher(undefined);
+    } else {
+      setVoucher(item);
+    }
+  }
+
+  useEffect(() => {
+    if(voucher?.code) {
+      const total = totalBeforeTax - totalBeforeTax*voucher?.discount/100 + tax;
+      setTotalAfterTax(total);
+    }
+  }, [voucher?.code])
   return (
     <div className="container w-[1100px] mx-auto mb-40">
     <div className="mb-16">
@@ -143,6 +163,38 @@ function Payment() {
       rowSelection={{ type: 'checkbox', columnWidth: 48 }}
     />
 
+    <div className='mt-8'>
+      <div className='flex items-center justify-between py-2 border border-gray-200 rounded-lg px-4'>
+        <p className='flex items-center gap-2'>
+          <MoneyCollectOutlined style={{color: '#22c55e'}} /> 
+          <span className='font-semibold text-[#22c55e]'>Shop voucher</span>
+        </p>
+        <p className='font-semibold text-[#1860c5] cursor-pointer' onClick={() => setOpen(true)}>{voucher?.code ?? 'Chọn voucher'}</p>
+      </div>
+      <Modal
+        title="List voucher"
+        open={open}
+        onOk={() => setOpen(false)}
+        onCancel={() => setOpen(false)}
+      >
+        <div className='flex flex-col gap-4'>
+          {
+            vouchers.map((item) => (
+              <div 
+                key={item.code}
+                className={`flex justify-between gap-5 py-2 border rounded-lg px-3 border-gray-200 cursor-pointer hover:shadow-lg transitions ${item.code === voucher?.code ? 'bg-[#22c55e] text-white' : ''}`}
+                onClick={() => handleApplyVoucher(item)}
+              >
+                <p className='font-semibold'>{item.code}</p>
+                <p className=''>{item.description}</p>
+              </div>
+            ))
+          }
+        </div>
+        
+      </Modal>
+    </div>
+
     <div className="ml-auto">
       <div className="mt-8 p-4 border border-gray-200 rounded-lg w-[500px] ml-auto">
         <div className="flex justify-between items-center mb-2">
@@ -153,9 +205,13 @@ function Payment() {
           <span>Thuế (VAT 10%):</span>
           <span>{tax?.toLocaleString()} đ</span>
         </div>
+        {voucher?.code && <div className="flex justify-between items-center mb-2">
+          <span>Voucher áp dụng:</span>
+          <span>- {(totalBeforeTax*voucher.discount/100)?.toLocaleString()} đ</span>
+        </div>}
         <div className="flex justify-between items-center font-bold text-lg">
           <span>Tổng phải thanh toán:</span>
-          <span>{totalAfterTax?.toLocaleString()} đ</span>
+          <span>{totalAfterTax} đ</span>
         </div>
       </div>
       <div className="flex justify-end">

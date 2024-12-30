@@ -10,3 +10,11 @@ export interface Order {
   total: number;
   date: string;
 }
+
+export interface Voucher {
+  id: number;
+  code: string;
+  discount: number;
+  expiration_date: string;
+  description: string;
+}

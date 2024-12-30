@@ -71,7 +71,7 @@ const FilterCategory = () => {
 
   return (
     <div className="mb-8">
-      <h3 className="text-xl font-semibold text-green-500 mb-3 underline underline-offset-[16px] decoration-4">Danh mục sản phẩm</h3>
+      <h3 className="xl font-semibold text-green-500 mb-3 underline underline-offset-[16px] decoration-4">Danh mục sản phẩm</h3>
       <hr />
       <ul className="mt-2">
         {categories.map((category) => (
